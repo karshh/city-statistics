@@ -13,11 +13,6 @@ export default {
   name: 'app',
   components: {
     Body
-  },
-  data() {
-    return {
-      censusData: []
-    }
   }
 }
 </script>
