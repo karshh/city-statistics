@@ -1,6 +1,9 @@
 <template>
   <div id="body" class="container">
-    <GChart type="LineChart" :data="chartData" :options="chartOptions" />
+    <div>
+      <h3 align="center">Population</h3>
+      <GChart type="LineChart" :data="chartData" :options="chartOptions" />
+    </div>
   </div>
 </template>
 
@@ -9,23 +12,46 @@ import { mapGetters, mapActions } from "vuex";
 import { GChart } from "vue-google-charts";
 
 export default {
-  name: "Body",
+  name: "PopulationChart",
   components: {
     GChart
   },
   data() {
     return {
       chartOptions: {
-        chart: {
-          title: "Population",
-          curveType: "function"
+        title: "Population",
+        curveType: "function",
+        titlePosition: "none",
+        titleTextStyle: {
+          color: "#F5F5F5"
         },
         interpolateNulls: true,
         hAxis: {
+          gridlines: {
+            color: "transparent"
+          },
+          textStyle: {
+            color: "#F5F5F5"
+          },
           format: "0000"
         },
-
-        height: 1000
+        vAxis: {
+          gridlines: {
+            color: "#303030"
+          },
+          textStyle: {
+            color: "#F5F5F5"
+          }
+        },
+        legend: {
+          position: "bottom",
+          textStyle: {
+            color: "#F5F5F5"
+          }
+        },
+        backgroundColor: "#424242",
+        height: 700,
+        chartArea: { width: "80%", height: "80%" }
       },
       chartData: []
     };

@@ -13,7 +13,6 @@ const getters = {
 
 const actions = {
     async fetchEdmontonPopulation(context: { commit: any }) {
-        let map: any = {};
         let response = await axios.get('https://data.edmonton.ca/api/views/frjf-2vsa/rows.json');
         
         let populationData: Array<{ id: string, year: number, population: number }> = [];

@@ -13,7 +13,6 @@ const getters = {
 
 const actions = {
     async fetchWinnipegPopulation(context: { commit: any }) {
-        let map: any = {};
         let response = await axios.get('https://data.winnipeg.ca/resource/mhuw-u7yg.json');
         
         let populationData: Array<{ id: string, year: number, population: number }> = [];
