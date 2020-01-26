@@ -1,6 +1,7 @@
 <template>
   <div id="body" class="container">
-    <div>
+    <div class="pop-chart" :style="{'backgroundColor': '#424242', 'color': '#F5F5F5'}">
+      <br>
       <h3 align="center">Population</h3>
       <GChart type="LineChart" :data="chartData" :options="chartOptions" />
     </div>
@@ -50,8 +51,8 @@ export default {
           }
         },
         backgroundColor: "#424242",
-        height: 700,
-        chartArea: { width: "80%", height: "80%" }
+        height: 500,
+        chartArea: { width: "75%", height: "70%" }
       },
       chartData: []
     };
@@ -78,8 +79,6 @@ export default {
       this.fetchEdmontonPopulation(),
       this.fetchWinnipegPopulation()
     ]).then(_ => {
-      // eslint-disable-next-line no-console
-      console.log(this.getCalgaryPopulation);
 
       let map = {};
 
@@ -106,4 +105,8 @@ export default {
 </script>
 
 <style scoped>
+.pop-chart {
+  box-shadow: 0 25px 100px -12px rgba(0, 0, 0, 0.25);
+}
+
 </style>
