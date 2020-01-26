@@ -14,14 +14,14 @@ const actions = {
         let map: any = {};
         let response = await axios.get('https://data.calgary.ca/resource/rmai-qvzh.json');
 
-        let populationData: Array<{ id: string, year: string, population: string }> = [];
+        let populationData: Array<{ id: string, year: number, population: number }> = [];
         response.data.forEach((dt: {year: string, residents: string }) => {
             if (!map[dt.year]) map[dt.year] = 0;
             map[dt.year] += (+dt.residents);
         });
 
         Object.keys(map).forEach(key => {
-            populationData.push({ id: uuid(), year: key.slice(0, key.indexOf('-')), population: map[key].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") })
+            populationData.push({ id: uuid(), year: +(key.slice(0, key.indexOf('-'))), population: +map[key] })
         });
         
         context.commit('setCalgaryPopulation', populationData);

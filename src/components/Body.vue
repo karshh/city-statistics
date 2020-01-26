@@ -1,54 +1,80 @@
 <template>
   <div id="body" class="container">
-    <p>Calgary</p>
-    <table class="table table-dark">
-      <thead>
-        <tr>
-          <th>Year</th>
-          <th>Population</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr :key="data.id" v-for="data in getCalgaryPopulation">
-          <td>{{data.year}}</td>
-          <td>{{data.population}}</td>
-        </tr>
-      </tbody>
-    </table>
-    <p>Edmonton</p>
-    <table class="table table-dark">
-      <thead>
-        <tr>
-          <th>Year</th>
-          <th>Population</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr :key="data.id" v-for="data in getEdmontonPopulation">
-          <td>{{data.year}}</td>
-          <td>{{data.population}}</td>
-        </tr>
-      </tbody>
-    </table>
+    <GChart type="LineChart" :data="chartData" :options="chartOptions" />
   </div>
 </template>
 
 <script>
+import { mapGetters, mapActions } from "vuex";
+import { GChart } from "vue-google-charts";
 
-import { mapGetters, mapActions } from 'vuex';
 export default {
   name: "Body",
+  components: {
+    GChart
+  },
+  data() {
+    return {
+      chartOptions: {
+        chart: {
+          title: "Population",
+          curveType: "function"
+        },
+        interpolateNulls: true,
+        hAxis: {
+          format: "0000"
+        },
+
+        height: 1000
+      },
+      chartData: []
+    };
+  },
   methods: {
-    ... mapActions(['fetchCalgaryPopulation']),
-    ... mapActions(['fetchEdmontonPopulation'])
+    ...mapActions([
+      "fetchCalgaryPopulation",
+      "fetchEdmontonPopulation",
+      "fetchWinnipegPopulation"
+    ])
   },
   computed: {
-    ... mapGetters(['getCalgaryPopulation']),
-    ... mapGetters(['getEdmontonPopulation'])
+    ...mapGetters([
+      "getCalgaryPopulation",
+      "getEdmontonPopulation",
+      "getWinnipegPopulation"
+    ])
   },
   created() {
-    this.fetchCalgaryPopulation();
-    this.fetchEdmontonPopulation();
+    this.chartData.push(["Year", "Calgary", "Edmonton", "Winnipeg"]);
+
+    Promise.all([
+      this.fetchCalgaryPopulation(),
+      this.fetchEdmontonPopulation(),
+      this.fetchWinnipegPopulation()
+    ]).then(_ => {
+      // eslint-disable-next-line no-console
+      console.log(this.getCalgaryPopulation);
+
+      let map = {};
+
+      this.getCalgaryPopulation.forEach(data => {
+        if (data.year < 1960) return;
+        if (!map[data.year]) map[data.year] = [data.year, null, null, null];
+        map[data.year][1] = data.population;
+      });
+      this.getEdmontonPopulation.forEach(data => {
+        if (data.year < 1960) return;
+        if (!map[data.year]) map[data.year] = [data.year, null, null, null];
+        map[data.year][2] = data.population;
+      });
+      this.getWinnipegPopulation.forEach(data => {
+        if (data.year < 1960) return;
+        if (!map[data.year]) map[data.year] = [data.year, null, null, null];
+        map[data.year][3] = data.population;
+      });
+
+      this.chartData.push(...Object.values(map));
+    });
   }
 };
 </script>
